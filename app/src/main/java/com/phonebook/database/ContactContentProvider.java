@@ -14,15 +14,14 @@ import com.phonebook.activity.R;
 import java.net.URISyntaxException;
 
 public class ContactContentProvider extends ContentProvider {
-
     /*
-        URI content
-        */
+     * URI CONTENT
+     */
+
     private static final String PROVIDER_NAME = "com.phonebook.database.ContactContentProvider";
 
     public static final Uri ASC_ALL_URI = Uri.parse("content://" + PROVIDER_NAME + "/contact");;
 
-    //Mostly unused but could be used for further customisation in the future
     private static final UriMatcher uriMatcher;
 
     static{
@@ -39,8 +38,25 @@ public class ContactContentProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs){
+        //deletes data
         SQLiteDatabase db = this.handler.getReadableDatabase();
-        int i = db.delete(DatabaseHandler.TABLE_NAME, selection, selectionArgs);
+
+        String table = "";
+
+        //gets table/configuration based on URI
+        switch (uriMatcher.match(uri)){
+            case 1:
+            case 2: {
+                table = DatabaseHandler.TABLE_NAME;
+                break;
+            }
+            default: {
+                throw new UnsupportedOperationException(this.getContext().getString(R.string.invalidUri));
+            }
+        }
+
+        //deletes rows and notifies of change.
+        int i = db.delete(table, selection, selectionArgs);
 
         this.getContext().getContentResolver().notifyChange(uri, null, false);
 
@@ -58,6 +74,7 @@ public class ContactContentProvider extends ContentProvider {
 
         String table = "";
 
+        //gets table/configuration based on URI
         switch (uriMatcher.match(uri)){
             case 1:
             case 2: {
@@ -68,8 +85,9 @@ public class ContactContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException(this.getContext().getString(R.string.invalidUri));
             }
         }
-        db.insert(table, null, values);
 
+        //inserts data into table - notifies of update
+        db.insert(table, null, values);
         this.getContext().getContentResolver().notifyChange(uri, null, false);
         return uri;
     }
@@ -88,6 +106,7 @@ public class ContactContentProvider extends ContentProvider {
 
         String table = "";
 
+        //gets table and ordering based on URI
         switch (uriMatcher.match(uri)){
             case 1:{
                 table = DatabaseHandler.TABLE_NAME;
@@ -103,8 +122,10 @@ public class ContactContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException(this.getContext().getString(R.string.invalidUri));
             }
         }
+        //does query
         Cursor c = db.query(table, projection, selection, selectionArgs, "", "", sortOrder);
 
+        //updates curser with update
         c.setNotificationUri(this.getContext().getContentResolver(), uri);
 
         return c;
@@ -117,6 +138,7 @@ public class ContactContentProvider extends ContentProvider {
 
         String table = "";
 
+        //gets table/configuration based on URI
         switch (uriMatcher.match(uri)){
             case 1:
             case 2: {
@@ -127,6 +149,8 @@ public class ContactContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException(this.getContext().getString(R.string.invalidUri));
             }
         }
+
+        //updates rows with appropiate data
         int i = db.update(table, values, selection, selectionArgs);
         this.getContext().getContentResolver().notifyChange(uri, null, false);
         return i;

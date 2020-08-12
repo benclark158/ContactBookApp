@@ -6,8 +6,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+//Handles all SQLite configurations
 public class DatabaseHandler extends SQLiteOpenHelper {
 
+    //names for all the SQL columns, tables etc
     public static final String TABLE_NAME = "Contacts";
     public static final String CONTACT_ID_NAME = "id";
     public static final String CONTACT_FIRST_NAME_NAME = "firstName";
@@ -19,6 +21,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "ContactDb.db";
 
+    //create table sql code
     private static final String SQL_CREATE_TABLE =
             "CREATE TABLE " + TABLE_NAME + " (" +
                     CONTACT_ID_NAME + " integer PRIMARY KEY AUTOINCREMENT," +
@@ -36,17 +39,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        //creates table
         db.execSQL(SQL_CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        //drops and re-creates table when its updated
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         this.onCreate(db);
     }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        //drops and re-creates table when it is downgraded
         onUpgrade(db, oldVersion, newVersion);
     }
 }

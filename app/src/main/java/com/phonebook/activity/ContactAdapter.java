@@ -25,6 +25,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         this.contactList.clear();
     }
 
+    /**
+     * View hold to save the layout
+     */
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public ConstraintLayout constraintLayout;
@@ -47,6 +50,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         // create a new view
         ConstraintLayout cl = (ConstraintLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_mini_view, parent, false);
 
+        //saves it
         ContactViewHolder vh = new ContactViewHolder(cl);
         return vh;
     }
@@ -54,21 +58,24 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     @Override
     public void onBindViewHolder(ContactViewHolder holder, int position) {
 
+        //get the details of the contact
         final Contact contact = this.contactList.get(position);
 
+        //creates click listener for that row/contact
         holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //sends contact information as bundle
                 Intent intent = new Intent(activity, ContactViewActivity.class);
-
                 Bundle bundle = contact.toBundle();
-
                 intent.putExtras(bundle);
 
+                //start activity
                 activity.startActivity(intent);
             }
         });
 
+        //configures this view will full name
         TextView text = holder.constraintLayout.findViewById(R.id.fullNameText);
         text.setText(contact.getFullName());
     }

@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ListActivity</string>
+    <string name="invalidUri">Invalid URI</string>
+</resources>

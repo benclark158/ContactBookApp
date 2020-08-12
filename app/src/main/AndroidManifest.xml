@@ -15,8 +15,20 @@
             android:enabled="true"
             android:exported="true"></provider>
 
-        <activity android:name=".ContactViewActivity" />
-        <activity android:name=".AddContactActivity" />
+        <activity android:name=".ContactViewActivity"
+            android:label="@string/view_activity_name"
+            android:parentActivityName="com.phonebook.activity.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.phonebook.activity.MainActivity" />
+        </activity>
+        <activity android:name=".AddContactActivity"
+            android:label="@string/add_activity_name"
+            android:parentActivityName="com.phonebook.activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.phonebook.activity.MainActivity" />
+        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
